@@ -2,6 +2,12 @@
 
 Netty is an asynchronous event-driven network application framework for rapid development of maintainable high performance protocol servers & clients.
 
+# Reading
+
+* `io.netty.codec.http`
+    * http
+    * websocketx
+
 ## Links
 
 * [Web Site](http://netty.io/)
