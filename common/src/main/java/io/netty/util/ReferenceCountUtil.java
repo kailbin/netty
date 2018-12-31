@@ -20,6 +20,8 @@ import io.netty.util.internal.logging.InternalLogger;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 
 /**
+ * 对 ReferenceCounted 中的操作进行封装
+ * <p/>
  * Collection of method to handle objects that may implement {@link ReferenceCounted}.
  */
 public final class ReferenceCountUtil {

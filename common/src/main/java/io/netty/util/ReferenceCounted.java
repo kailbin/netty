@@ -31,16 +31,22 @@ package io.netty.util;
  */
 public interface ReferenceCounted {
     /**
+     * 返回对象的引用计数个数，如果是0则代表已经被回收
+     * <p/>
      * Returns the reference count of this object.  If {@code 0}, it means this object has been deallocated.
      */
     int refCnt();
 
     /**
+     * 保留，对象引用计数 +1
+     * <p/>
      * Increases the reference count by {@code 1}.
      */
     ReferenceCounted retain();
 
     /**
+     * 保留，对象引用计数 +increment
+     * <p/>
      * Increases the reference count by the specified {@code increment}.
      */
     ReferenceCounted retain(int increment);

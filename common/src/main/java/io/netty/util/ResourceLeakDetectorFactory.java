@@ -27,6 +27,8 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 
 /**
+ * netty 资源泄漏探测器【源码分析】：https://donald-draper.iteye.com/blog/2393940
+ *
  * This static factory should be used to load {@link ResourceLeakDetector}s as needed
  */
 public abstract class ResourceLeakDetectorFactory {

@@ -39,6 +39,11 @@ import static io.netty.util.internal.StringUtil.EMPTY_STRING;
 import static io.netty.util.internal.StringUtil.NEWLINE;
 import static io.netty.util.internal.StringUtil.simpleClassName;
 
+/**
+ * 资源泄漏检测器
+ * <p />
+ * Netty 的资源泄露探测机制：https://ylgrgyq.github.io/2017/11/11/netty-resource-leack-detector/
+ */
 public class ResourceLeakDetector<T> {
 
     private static final String PROP_LEVEL_OLD = "io.netty.leakDetectionLevel";
