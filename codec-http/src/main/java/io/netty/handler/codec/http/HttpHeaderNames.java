@@ -19,6 +19,8 @@ package io.netty.handler.codec.http;
 import io.netty.util.AsciiString;
 
 /**
+ * HTTP 请求头名
+ *
  * Standard HTTP header names.
  * <p>
  * These are all defined as lowercase to support HTTP/2 requirements while also not

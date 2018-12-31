@@ -35,6 +35,8 @@ import static io.netty.util.internal.ObjectUtil.*;
 import static io.netty.util.internal.StringUtil.*;
 
 /**
+ * 将HTTP查询字符串拆分为路径字符串和键值参数对。
+ *
  * Splits an HTTP query string into a path string and key-value parameter pairs.
  * This decoder is for one time use only.  Create a new instance for each URI:
  * <pre>

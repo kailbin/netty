@@ -25,6 +25,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 
 /**
+ * 根据路径字符串和键值参数对创建URL编码的URI
+ * <p>
  * Creates an URL-encoded URI from a path string and key-value parameter pairs.
  * This encoder is for one time use only.  Create a new instance for each URI.
  *
@@ -33,6 +35,7 @@ import java.nio.charset.UnsupportedCharsetException;
  * encoder.addParam("recipient", "world");
  * assert encoder.toString().equals("/hello?recipient=world");
  * </pre>
+ *
  * @see QueryStringDecoder
  */
 public class QueryStringEncoder {
