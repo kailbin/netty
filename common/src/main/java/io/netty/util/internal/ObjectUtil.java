@@ -17,6 +17,8 @@ package io.netty.util.internal;
 import java.util.Collection;
 
 /**
+ * 对象校验工具
+ * <p/>
  * A grab-bag of useful utility methods.
  */
 public final class ObjectUtil {

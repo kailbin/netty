@@ -22,6 +22,8 @@ import io.netty.util.internal.SystemPropertyUtil;
 import java.util.Locale;
 
 /**
+ * 主要用来获取 可用 CPU 数，可通过系统属性 io.netty.availableProcessors 进行覆盖
+ *
  * A utility class for wrapping calls to {@link Runtime}.
  */
 public final class NettyRuntime {
@@ -54,6 +56,8 @@ public final class NettyRuntime {
         }
 
         /**
+         * 默认是可用 CPU 数量（Runtime#availableProcessors），可通过系统属性 io.netty.availableProcessors 进行覆盖
+         * <p/>
          * Get the configured number of available processors. The default is {@link Runtime#availableProcessors()}.
          * This can be overridden by setting the system property "io.netty.availableProcessors" or by invoking
          * {@link #setAvailableProcessors(int)} before any calls to this method.
