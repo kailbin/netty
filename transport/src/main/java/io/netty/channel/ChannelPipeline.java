@@ -216,6 +216,8 @@ import java.util.NoSuchElementException;
 public interface ChannelPipeline
         extends ChannelInboundInvoker, ChannelOutboundInvoker, Iterable<Entry<String, ChannelHandler>> {
 
+    // region add 方法
+
     /**
      * Inserts a {@link ChannelHandler} at the first position of this pipeline.
      *
@@ -380,6 +382,10 @@ public interface ChannelPipeline
      */
     ChannelPipeline addLast(EventExecutorGroup group, ChannelHandler... handlers);
 
+    // endregion
+
+    // region remove 方法
+
     /**
      * Removes the specified {@link ChannelHandler} from this pipeline.
      *
@@ -440,6 +446,10 @@ public interface ChannelPipeline
      *         if this pipeline is empty
      */
     ChannelHandler removeLast();
+
+    // endregion
+
+    // region replace 方法
 
     /**
      * Replaces the specified {@link ChannelHandler} with a new handler in this pipeline.
@@ -502,6 +512,8 @@ public interface ChannelPipeline
      */
     <T extends ChannelHandler> T replace(Class<T> oldHandlerType, String newName,
                                          ChannelHandler newHandler);
+
+    // endregion
 
     /**
      * Returns the first {@link ChannelHandler} in this pipeline.
@@ -594,6 +606,8 @@ public interface ChannelPipeline
      */
     Map<String, ChannelHandler> toMap();
 
+    // region 触发事件
+
     @Override
     ChannelPipeline fireChannelRegistered();
 
@@ -620,6 +634,8 @@ public interface ChannelPipeline
 
     @Override
     ChannelPipeline fireChannelWritabilityChanged();
+
+    // endregion
 
     @Override
     ChannelPipeline flush();

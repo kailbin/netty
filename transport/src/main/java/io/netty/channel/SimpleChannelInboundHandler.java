@@ -19,6 +19,10 @@ import io.netty.util.ReferenceCountUtil;
 import io.netty.util.internal.TypeParameterMatcher;
 
 /**
+ * 用于只处理特殊类型的消息，避免进行 instanceOf 类型判断<br/>
+ * 1. 相当于根据的消息的类型进行分发<br/>
+ * 2. 自动 release 数据<br/>
+ * <p/>
  * {@link ChannelInboundHandlerAdapter} which allows to explicit only handle a specific type of messages.
  *
  * For example here is an implementation which only handle {@link String} messages.

@@ -27,6 +27,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadFactory;
 
 /**
+ * 默认 EventLoopGroup 默认线程数 = 可用CPU个数 * 2 ，可通过 系统参数 io.netty.eventLoopThreads 进行覆盖 <br/>
+ * <p/>
  * Abstract base class for {@link EventLoopGroup} implementations that handles their tasks with multiple threads at
  * the same time.
  */

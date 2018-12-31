@@ -178,11 +178,15 @@ import java.lang.annotation.Target;
 public interface ChannelHandler {
 
     /**
+     * pipeline addXXX 的时候进行调用，参考 DefaultChannelPipeline 的 replace 方式，先 add 再 remove
+     * <p/>
      * Gets called after the {@link ChannelHandler} was added to the actual context and it's ready to handle events.
      */
     void handlerAdded(ChannelHandlerContext ctx) throws Exception;
 
     /**
+     * pipeline removeXXX 的时候进行调用，参考 DefaultChannelPipeline 的 replace 方式，先 add 再 remove
+     * <p/>
      * Gets called after the {@link ChannelHandler} was removed from the actual context and it doesn't handle events
      * anymore.
      */

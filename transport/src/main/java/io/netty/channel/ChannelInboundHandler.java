@@ -21,6 +21,7 @@ package io.netty.channel;
  */
 public interface ChannelInboundHandler extends ChannelHandler {
 
+    // region Registered
     /**
      * The {@link Channel} of the {@link ChannelHandlerContext} was registered with its {@link EventLoop}
      */
@@ -30,6 +31,10 @@ public interface ChannelInboundHandler extends ChannelHandler {
      * The {@link Channel} of the {@link ChannelHandlerContext} was unregistered from its {@link EventLoop}
      */
     void channelUnregistered(ChannelHandlerContext ctx) throws Exception;
+
+    // endregion
+
+    // region Active
 
     /**
      * The {@link Channel} of the {@link ChannelHandlerContext} is now active
@@ -41,6 +46,10 @@ public interface ChannelInboundHandler extends ChannelHandler {
      * end of lifetime.
      */
     void channelInactive(ChannelHandlerContext ctx) throws Exception;
+
+    // endregion
+
+    // region Read
 
     /**
      * Invoked when the current {@link Channel} has read a message from the peer.
@@ -54,6 +63,9 @@ public interface ChannelInboundHandler extends ChannelHandler {
      * {@link ChannelHandlerContext#read()} is called.
      */
     void channelReadComplete(ChannelHandlerContext ctx) throws Exception;
+
+    // endregion
+
 
     /**
      * Gets called if an user event was triggered.
