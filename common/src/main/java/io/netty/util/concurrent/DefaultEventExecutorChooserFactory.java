@@ -20,6 +20,8 @@ import io.netty.util.internal.UnstableApi;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * 使用简单的循环来选择下一个EventExecutor
+ * <p/>
  * Default implementation which uses simple round-robin to choose next {@link EventExecutor}.
  */
 @UnstableApi
@@ -27,7 +29,8 @@ public final class DefaultEventExecutorChooserFactory implements EventExecutorCh
 
     public static final DefaultEventExecutorChooserFactory INSTANCE = new DefaultEventExecutorChooserFactory();
 
-    private DefaultEventExecutorChooserFactory() { }
+    private DefaultEventExecutorChooserFactory() {
+    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -39,10 +42,17 @@ public final class DefaultEventExecutorChooserFactory implements EventExecutorCh
         }
     }
 
+    /**
+     * 是否是2的N次幂
+     */
     private static boolean isPowerOfTwo(int val) {
         return (val & -val) == val;
     }
 
+
+    /**
+     * 适合 EventExecutor 数组元素个数是 2的N次幂的 情况
+     */
     private static final class PowerOfTwoEventExecutorChooser implements EventExecutorChooser {
         private final AtomicInteger idx = new AtomicInteger();
         private final EventExecutor[] executors;
@@ -53,10 +63,15 @@ public final class DefaultEventExecutorChooserFactory implements EventExecutorCh
 
         @Override
         public EventExecutor next() {
+            // 减号的运算优先级 大于 &的运算优先级
             return executors[idx.getAndIncrement() & executors.length - 1];
         }
     }
 
+
+    /**
+     * 从 EventExecutor 数组中循环依次获取
+     */
     private static final class GenericEventExecutorChooser implements EventExecutorChooser {
         private final AtomicInteger idx = new AtomicInteger();
         private final EventExecutor[] executors;
