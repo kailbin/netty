@@ -278,7 +278,20 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
         return doBind(localAddress);
     }
 
+    /**
+     * 绑定端口
+     */
     private ChannelFuture doBind(final SocketAddress localAddress) {
+        /*
+         * ❤️❤️❤️
+         * .channel(NioServerSocketChannel.class)
+         * newInstance 实例化 NioServerSocketChannel
+         *
+         * init(channel) 配置 NioServerSocketChannel（ServerBootstrap 和 Bootstrap 各自实现 init 方法）
+         * pipeline.addLast(handler)
+         *
+         * ❤️❤️❤️
+         */
         final ChannelFuture regFuture = initAndRegister();
         final Channel channel = regFuture.channel();
         if (regFuture.cause() != null) {
@@ -317,7 +330,9 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
     final ChannelFuture initAndRegister() {
         Channel channel = null;
         try {
+            // NioServerSocketChannel.class.getConstructor().newInstance()
             channel = channelFactory.newChannel();
+            // ❤️❤️❤️
             init(channel);
         } catch (Throwable t) {
             if (channel != null) {
@@ -330,6 +345,7 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
             return new DefaultChannelPromise(new FailedChannel(), GlobalEventExecutor.INSTANCE).setFailure(t);
         }
 
+        // config().group() 拿到的是 bossGroup
         ChannelFuture regFuture = config().group().register(channel);
         if (regFuture.cause() != null) {
             if (channel.isRegistered()) {
@@ -353,6 +369,14 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
 
     abstract void init(Channel channel) throws Exception;
 
+    /**
+     * 异步绑定
+     *
+     * @param regFuture
+     * @param channel
+     * @param localAddress
+     * @param promise
+     */
     private static void doBind0(
             final ChannelFuture regFuture, final Channel channel,
             final SocketAddress localAddress, final ChannelPromise promise) {
@@ -363,6 +387,10 @@ public abstract class AbstractBootstrap<B extends AbstractBootstrap<B, C>, C ext
             @Override
             public void run() {
                 if (regFuture.isSuccess()) {
+                    /*
+                     * ❤️❤️❤️
+                     * pipeline.bind  -> ((AbstractChannelHandlerContext)tail).bind
+                     */
                     channel.bind(localAddress, promise).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
                 } else {
                     promise.setFailure(regFuture.cause());

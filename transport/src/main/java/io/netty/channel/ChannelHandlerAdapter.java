@@ -29,6 +29,8 @@ public abstract class ChannelHandlerAdapter implements ChannelHandler {
     boolean added;
 
     /**
+     * 确保不可共享
+     * <p/>
      * Throws {@link IllegalStateException} if {@link ChannelHandlerAdapter#isSharable()} returns {@code true}
      */
     protected void ensureNotSharable() {
@@ -38,6 +40,8 @@ public abstract class ChannelHandlerAdapter implements ChannelHandler {
     }
 
     /**
+     * 判断是否可共享
+     * <p/>
      * Return {@code true} if the implementation is {@link Sharable} and so can be added
      * to different {@link ChannelPipeline}s.
      */

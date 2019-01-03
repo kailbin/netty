@@ -32,6 +32,8 @@ import static io.netty.util.internal.MacAddressUtil.defaultMachineId;
 import static io.netty.util.internal.MacAddressUtil.parseMAC;
 
 /**
+ * TODO DefaultChannelId
+ *
  * The default {@link ChannelId} implementation.
  */
 public final class DefaultChannelId implements ChannelId {

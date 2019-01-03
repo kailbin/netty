@@ -194,6 +194,8 @@ public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparabl
     Channel flush();
 
     /**
+     * TODO Unsafe
+     *
      * <em>Unsafe</em> operations that should <em>never</em> be called from user-code. These methods
      * are only provided to implement the actual transport, and must be invoked from an I/O thread except for the
      * following methods:
@@ -233,6 +235,8 @@ public interface Channel extends AttributeMap, ChannelOutboundInvoker, Comparabl
         void register(EventLoop eventLoop, ChannelPromise promise);
 
         /**
+         *
+         *
          * Bind the {@link SocketAddress} to the {@link Channel} of the {@link ChannelPromise} and notify
          * it once its done.
          */

@@ -80,8 +80,11 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
      */
     protected AbstractChannel(Channel parent) {
         this.parent = parent;
+        // ❤️❤️
         id = newId();
+        // ❤️❤️❤️❤️
         unsafe = newUnsafe();
+        // ❤️❤️❤️❤️❤️❤️ 实例化 NioServerSocketChannel 会把自己 new DefaultChannelPipeline(this) 加入 pipeline 双向队列
         pipeline = newChannelPipeline();
     }
 
@@ -497,6 +500,9 @@ public abstract class AbstractChannel extends DefaultAttributeMap implements Cha
             }
         }
 
+        /**
+         * NIO 的话注册 Selector
+         */
         private void register0(ChannelPromise promise) {
             try {
                 // check if the channel is still open as it could be closed in the mean time when the register

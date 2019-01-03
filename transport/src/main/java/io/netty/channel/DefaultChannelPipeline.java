@@ -92,6 +92,13 @@ public class DefaultChannelPipeline implements ChannelPipeline {
      */
     private boolean registered;
 
+    /**
+     * 一个 Channel 绑定一个 Pipeline，Pipeline 有多个 Handler 进行处理
+     * 初始化的时候 Head 和 Tail 都是自己
+     *
+     * HeadContext extends AbstractChannelHandlerContext implements ChannelOutboundHandler, ChannelInboundHandler
+     * TailContext extends AbstractChannelHandlerContext implements ChannelInboundHandler
+     */
     protected DefaultChannelPipeline(Channel channel) {
         this.channel = ObjectUtil.checkNotNull(channel, "channel");
         succeededFuture = new SucceededChannelFuture(channel, null);

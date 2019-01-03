@@ -17,6 +17,9 @@ package io.netty.channel;
 
 import io.netty.util.concurrent.EventExecutor;
 
+/**
+ * 对 入站 | 出站 Handler 进行区分
+ */
 final class DefaultChannelHandlerContext extends AbstractChannelHandlerContext {
 
     private final ChannelHandler handler;
@@ -35,10 +38,16 @@ final class DefaultChannelHandlerContext extends AbstractChannelHandlerContext {
         return handler;
     }
 
+    /**
+     * 判断是否是 入站
+     */
     private static boolean isInbound(ChannelHandler handler) {
         return handler instanceof ChannelInboundHandler;
     }
 
+    /**
+     * 判断是否是 出站
+     */
     private static boolean isOutbound(ChannelHandler handler) {
         return handler instanceof ChannelOutboundHandler;
     }

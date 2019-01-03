@@ -44,6 +44,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * TODO
+ *
  * Abstract base class for {@link Channel} implementations which use a Selector based approach.
  */
 public abstract class AbstractNioChannel extends AbstractChannel {
@@ -82,6 +84,7 @@ public abstract class AbstractNioChannel extends AbstractChannel {
      */
     protected AbstractNioChannel(Channel parent, SelectableChannel ch, int readInterestOp) {
         super(parent);
+        // ServerSocketChannel
         this.ch = ch;
         this.readInterestOp = readInterestOp;
         try {
@@ -378,6 +381,9 @@ public abstract class AbstractNioChannel extends AbstractChannel {
         return loop instanceof NioEventLoop;
     }
 
+    /**
+     * 注册 Selector
+     */
     @Override
     protected void doRegister() throws Exception {
         boolean selected = false;

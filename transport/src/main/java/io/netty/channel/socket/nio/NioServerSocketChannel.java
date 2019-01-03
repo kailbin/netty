@@ -39,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * // TODO
+ * <p/>
  * A {@link io.netty.channel.socket.ServerSocketChannel} implementation which uses
  * NIO selector based implementation to accept new connections.
  */
@@ -50,6 +52,9 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
 
     private static final InternalLogger logger = InternalLoggerFactory.getInstance(NioServerSocketChannel.class);
 
+    /**
+     * java.nio.channels.spi.SelectorProvider
+     */
     private static ServerSocketChannel newSocket(SelectorProvider provider) {
         try {
             /**
@@ -68,6 +73,8 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
     private final ServerSocketChannelConfig config;
 
     /**
+     * serverBootstrap.channel(NioServerSocketChannel.class)，实例化 NioServerSocketChannel 的时候默认的构造方法
+     * <p/>
      * Create a new instance
      */
     public NioServerSocketChannel() {
@@ -85,6 +92,9 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
      * Create a new instance using the given {@link ServerSocketChannel}.
      */
     public NioServerSocketChannel(ServerSocketChannel channel) {
+        /*
+         * SelectionKey.OP_ACCEPT
+         */
         super(null, channel, SelectionKey.OP_ACCEPT);
         config = new NioServerSocketChannelConfig(this, javaChannel().socket());
     }
@@ -124,6 +134,9 @@ public class NioServerSocketChannel extends AbstractNioMessageChannel
         return SocketUtils.localSocketAddress(javaChannel().socket());
     }
 
+    /**
+     * serverSocketChannel.socket().bind
+     */
     @Override
     protected void doBind(SocketAddress localAddress) throws Exception {
         if (PlatformDependent.javaVersion() >= 7) {

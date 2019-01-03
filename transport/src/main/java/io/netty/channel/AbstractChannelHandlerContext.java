@@ -35,6 +35,12 @@ import io.netty.util.internal.logging.InternalLoggerFactory;
 import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
+/**
+ * 子类
+ * -- TailContext in DefaultChannelPipeline (io.netty.channel)
+ * -- HeadContext in DefaultChannelPipeline (io.netty.channel)
+ * -- DefaultChannelHandlerContext (io.netty.channel)
+ */
 abstract class AbstractChannelHandlerContext extends DefaultAttributeMap
         implements ChannelHandlerContext, ResourceLeakHint {
 
