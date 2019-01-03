@@ -20,7 +20,7 @@ import io.netty.util.internal.UnstableApi;
 /**
  * 默认的实现 是 使用简单的循环来选择下一个EventExecutor
  * <p/>
- * 
+ *
  * Factory that creates new {@link EventExecutorChooser}s.
  */
 @UnstableApi

@@ -78,6 +78,7 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
 
         children = new EventExecutor[nThreads];
 
+        // region 循环创建 EventExecutor
         for (int i = 0; i < nThreads; i ++) {
             boolean success = false;
             try {
@@ -107,7 +108,9 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
                 }
             }
         }
+        // endregion
 
+        // 根据线程个数，选择指定的 chooser
         chooser = chooserFactory.newChooser(children);
 
         final FutureListener<Object> terminationListener = new FutureListener<Object>() {
@@ -132,6 +135,9 @@ public abstract class MultithreadEventExecutorGroup extends AbstractEventExecuto
         return new DefaultThreadFactory(getClass());
     }
 
+    /**
+     * 从线程池里面轮训获取
+     */
     @Override
     public EventExecutor next() {
         return chooser.next();
