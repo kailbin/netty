@@ -96,8 +96,10 @@ public class LineBasedFrameDecoder extends ByteToMessageDecoder {
      *                          be created.
      */
     protected Object decode(ChannelHandlerContext ctx, ByteBuf buffer) throws Exception {
+        // 换行符的位置
         final int eol = findEndOfLine(buffer);
         if (!discarding) {
+            // 找到了换行符
             if (eol >= 0) {
                 final ByteBuf frame;
                 final int length = eol - buffer.readerIndex();
@@ -118,7 +120,9 @@ public class LineBasedFrameDecoder extends ByteToMessageDecoder {
 
                 return frame;
             } else {
+                // 未找到换行符
                 final int length = buffer.readableBytes();
+                // 判断是否超过最大长度
                 if (length > maxLength) {
                     discardedBytes = length;
                     buffer.readerIndex(buffer.writerIndex());

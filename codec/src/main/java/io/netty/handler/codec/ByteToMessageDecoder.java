@@ -27,6 +27,10 @@ import io.netty.util.internal.StringUtil;
 import java.util.List;
 
 /**
+ * 其子类都必须是不可共享 Handler
+ * <p/>
+ * <p/>
+ * <p/>
  * {@link ChannelInboundHandlerAdapter} which decodes bytes in a stream-like fashion from one {@link ByteBuf} to an
  * other Message type.
  *
@@ -69,7 +73,10 @@ import java.util.List;
  */
 public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter {
 
+    // region MERGE_CUMULATOR & COMPOSITE_CUMULATOR 累积器
     /**
+     * 默认累积器
+     * <p/>
      * Cumulate {@link ByteBuf}s by merge them into one {@link ByteBuf}'s, using memory copies.
      */
     public static final Cumulator MERGE_CUMULATOR = new Cumulator() {
@@ -101,6 +108,8 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
     };
 
     /**
+     *
+     *
      * Cumulate {@link ByteBuf}s by add them to a {@link CompositeByteBuf} and so do no memory copy whenever possible.
      * Be aware that {@link CompositeByteBuf} use a more complex indexing implementation so depending on your use-case
      * and the decoder implementation this may be slower then just use the {@link #MERGE_CUMULATOR}.
@@ -141,11 +150,15 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
             }
         }
     };
+    // endregion
 
     private static final byte STATE_INIT = 0;
     private static final byte STATE_CALLING_CHILD_DECODE = 1;
     private static final byte STATE_HANDLER_REMOVED_PENDING = 2;
 
+    /**
+     * 有很多共享变量，所以该 Handler 不能共享
+     */
     ByteBuf cumulation;
     private Cumulator cumulator = MERGE_CUMULATOR;
     private boolean singleDecode;
@@ -163,6 +176,9 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
     private int discardAfterReads = 16;
     private int numReads;
 
+    /**
+     * 构造方法校验 确保不可共享
+     */
     protected ByteToMessageDecoder() {
         ensureNotSharable();
     }
@@ -266,26 +282,36 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof ByteBuf) {
+            // 从对象池中取出一个List
             CodecOutputList out = CodecOutputList.newInstance();
             try {
                 ByteBuf data = (ByteBuf) msg;
                 first = cumulation == null;
                 if (first) {
+                    // 第一次
                     cumulation = data;
                 } else {
+                    // 第二次，就将 data 向 cumulation 追加，并释放 data
                     cumulation = cumulator.cumulate(ctx.alloc(), cumulation, data);
                 }
+                // 得到 追加后的 (ByteBuf)cumulation 后，调用 decode 方法进行解码
+                // 解码过程中，调用 fireChannelRead 方法，主要目的是将累积区的内容 decode 到 数组中
                 callDecode(ctx, cumulation, out);
             } catch (DecoderException e) {
                 throw e;
             } catch (Exception e) {
                 throw new DecoderException(e);
             } finally {
+                // 如果累计区没有可读字节了
                 if (cumulation != null && !cumulation.isReadable()) {
+                    // 将次数归零
                     numReads = 0;
+                    // 释放累计区
                     cumulation.release();
+                    // 等待 gc
                     cumulation = null;
-                } else if (++ numReads >= discardAfterReads) {
+                } else // 如果超过了 16 次，就压缩累计区，主要是将已经读过的数据丢弃，将 readIndex 归零。
+                    if (++ numReads >= discardAfterReads) {
                     // We did enough reads already try to discard some bytes so we not risk to see a OOME.
                     // See https://github.com/netty/netty/issues/4275
                     numReads = 0;
@@ -294,7 +320,9 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
 
                 int size = out.size();
                 decodeWasNull = !out.insertSinceRecycled();
+                // 循环数组，向后面的 handler 发送数据，如果数组是空，那不会调用
                 fireChannelRead(ctx, out, size);
+                // 将数组中的内容清空，将数组的数组的下标恢复至原来
                 out.recycle();
             }
         } else {
