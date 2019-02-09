@@ -24,10 +24,16 @@ import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import static io.netty.util.internal.ObjectUtil.checkPositive;
 
 /**
+ * 引用计数的抽象实现
+ *
  * Abstract base class for {@link ByteBuf} implementations that count references.
  */
 public abstract class AbstractReferenceCountedByteBuf extends AbstractByteBuf {
+
     private static final long REFCNT_FIELD_OFFSET;
+    /**
+     * 原子操作 refCnt 字段
+     */
     private static final AtomicIntegerFieldUpdater<AbstractReferenceCountedByteBuf> refCntUpdater =
             AtomicIntegerFieldUpdater.newUpdater(AbstractReferenceCountedByteBuf.class, "refCnt");
 
@@ -82,6 +88,9 @@ public abstract class AbstractReferenceCountedByteBuf extends AbstractByteBuf {
         refCntUpdater.set(this, newRefCnt << 1); // overflow OK here
     }
 
+    /**
+     * 保留（引用计数 +1）
+     */
     @Override
     public ByteBuf retain() {
         return retain0(1);
@@ -92,6 +101,9 @@ public abstract class AbstractReferenceCountedByteBuf extends AbstractByteBuf {
         return retain0(checkPositive(increment, "increment"));
     }
 
+    /**
+     * 引用计数相加的时候 对 整形越界 和 <=0 的情况进行判断
+     */
     private ByteBuf retain0(final int increment) {
         // all changes to the raw count are 2x the "real" change
         int adjustedIncrement = increment << 1; // overflow OK here
@@ -119,6 +131,9 @@ public abstract class AbstractReferenceCountedByteBuf extends AbstractByteBuf {
         return this;
     }
 
+    /**
+     * 使用（引用计数 -1）
+     */
     @Override
     public boolean release() {
         return release0(1);

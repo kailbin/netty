@@ -26,6 +26,8 @@ import java.util.Arrays;
 
 
 /**
+ * 非内存池方式分配 ByteBuf，内存池方式，参见：{@link PooledByteBufAllocator}
+ *
  * Creates a new {@link ByteBuf} by allocating new space or by wrapping
  * or copying existing byte arrays, byte buffers and a string.
  *

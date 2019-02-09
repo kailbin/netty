@@ -117,20 +117,37 @@ public class UnpooledHeapByteBuf extends AbstractReferenceCountedByteBuf {
         return array.length;
     }
 
+    /**
+     * 扩容 | 缩容
+     */
     @Override
     public ByteBuf capacity(int newCapacity) {
+        /*
+         * 1. 检查 ByteBuf 是否已经被释放
+         * 2. 检查新申请的空间是否会越界
+         */
         checkNewCapacity(newCapacity);
 
         int oldCapacity = array.length;
         byte[] oldArray = array;
+
+        // 扩容
         if (newCapacity > oldCapacity) {
             byte[] newArray = allocateArray(newCapacity);
             System.arraycopy(oldArray, 0, newArray, 0, oldArray.length);
             setArray(newArray);
             freeArray(oldArray);
-        } else if (newCapacity < oldCapacity) {
+        } else
+             // 缩容
+
+            if (newCapacity < oldCapacity) {
             byte[] newArray = allocateArray(newCapacity);
             int readerIndex = readerIndex();
+            /*
+             * 如果新的容量值小于读索引，说明没有可读的字节数组 需要复制到新创建的缓冲区，
+             * 将读写索引设置为新的容量值即可。最后调用 setArray 方法替换原来的字节数组。
+             * 扩容后调用 freeArray 释放原来的 byte 数组 oldArray 。
+             */
             if (readerIndex < newCapacity) {
                 int writerIndex = writerIndex();
                 if (writerIndex > newCapacity) {

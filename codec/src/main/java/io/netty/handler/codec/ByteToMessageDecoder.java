@@ -80,6 +80,12 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
      * Cumulate {@link ByteBuf}s by merge them into one {@link ByteBuf}'s, using memory copies.
      */
     public static final Cumulator MERGE_CUMULATOR = new Cumulator() {
+        /**
+         * @param alloc 换种分配器
+         * @param cumulation 现有累积的数据
+         * @param in 新读到的数据
+         * @return
+         */
         @Override
         public ByteBuf cumulate(ByteBufAllocator alloc, ByteBuf cumulation, ByteBuf in) {
             try {
@@ -115,6 +121,13 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
      * and the decoder implementation this may be slower then just use the {@link #MERGE_CUMULATOR}.
      */
     public static final Cumulator COMPOSITE_CUMULATOR = new Cumulator() {
+
+        /**
+         * @param alloc 换种分配器
+         * @param cumulation 现有累积的数据
+         * @param in 新读到的数据
+         * @return
+         */
         @Override
         public ByteBuf cumulate(ByteBufAllocator alloc, ByteBuf cumulation, ByteBuf in) {
             ByteBuf buffer;
@@ -160,9 +173,15 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
      * 有很多共享变量，所以该 Handler 不能共享
      */
     ByteBuf cumulation;
+    /**
+     * 默认累加器
+     */
     private Cumulator cumulator = MERGE_CUMULATOR;
     private boolean singleDecode;
     private boolean decodeWasNull;
+    /**
+     * 是否是当前连接首次发送的数据
+     */
     private boolean first;
     /**
      * A bitmask where the bits are defined as
@@ -225,6 +244,8 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
     }
 
     /**
+     * 实际可读字节数
+     *
      * Returns the actual number of readable bytes in the internal cumulative
      * buffer of this decoder. You usually do not need to rely on this value
      * to write a decoder. Use it only when you must use it at your own risk.
@@ -291,7 +312,7 @@ public abstract class ByteToMessageDecoder extends ChannelInboundHandlerAdapter 
                     // 第一次
                     cumulation = data;
                 } else {
-                    // 第二次，就将 data 向 cumulation 追加，并释放 data
+                    // 第二次，将 data 向 cumulation 追加，并释放 data
                     cumulation = cumulator.cumulate(ctx.alloc(), cumulation, data);
                 }
                 // 得到 追加后的 (ByteBuf)cumulation 后，调用 decode 方法进行解码
